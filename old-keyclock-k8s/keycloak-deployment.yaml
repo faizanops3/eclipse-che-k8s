@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  # namespace: key
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: docker.io/bitnami/keycloak:20.0.3
+          ports:
+            - containerPort: 8443
+          envFrom:
+            - configMapRef:
+                name: keycloak-config
+          volumeMounts:
+            - name: keycloak-certs
+              mountPath: /opt/bitnami/keycloak/certs
+      volumes:
+        - name: keycloak-certs
+          hostPath:
+            path: /home/cp/eclipse-che-kubernetes/keyclock-k8s/certs/keycloak

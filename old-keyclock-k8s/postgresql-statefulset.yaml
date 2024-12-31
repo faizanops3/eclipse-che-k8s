@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql
+  # namespace: key
+  labels:
+    app: postgresql
+spec:
+  selector:
+    matchLabels:
+      app: postgresql
+  serviceName: postgresql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+        - name: postgresql
+          image: docker.io/bitnami/postgresql:15
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgresql-config
+          volumeMounts:
+            - name: postgresql-data
+              mountPath: /bitnami/postgresql
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgresql-pvc

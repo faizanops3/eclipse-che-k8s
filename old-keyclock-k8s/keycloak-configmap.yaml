@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+  # namespace: key
+data:
+  KEYCLOAK_FRONTEND_URL: https://keycloak.37.60.247.176.nip.io
+  KEYCLOAK_CREATE_ADMIN_USER: "true"
+  KEYCLOAK_ADMIN: admin
+  KEYCLOAK_ADMIN_PASSWORD: admin
+  KEYCLOAK_MANAGEMENT_USER: management
+  KEYCLOAK_MANAGEMENT_PASSWORD: management
+  KEYCLOAK_ENABLE_HTTPS: "true"
+  KEYCLOAK_HTTPS_USE_PEM: "true"
+  KEYCLOAK_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/tls.crt
+  KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/tls.key
+  # KEYCLOAK_DATABASE_HOST: postgresql.key.svc.cluster.local
+  KEYCLOAK_DATABASE_HOST: postgresql
+  KEYCLOAK_DATABASE_PORT: "5432"
+  KEYCLOAK_DATABASE_NAME: keycloak
+  KEYCLOAK_DATABASE_USER: keycloak
+  KEYCLOAK_DATABASE_PASSWORD: password
+  PROXY_ADDRESS_FORWARDING: "true"

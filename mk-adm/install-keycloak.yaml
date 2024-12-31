@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keycloak
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: keycloak-selfsigned
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keycloak-selfsigned
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  isCA: true
+  commonName: keycloak-selfsigned-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: keycloak-selfsigned
+    kind: Issuer
+    group: cert-manager.io
+  secretName: ca.crt
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: keycloak
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  ca:
+    secretName: ca.crt
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keycloak
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  isCA: false
+  commonName: keycloak
+  dnsNames:
+    - keycloak.devpath.xyz
+  privateKey:   
+    algorithm: RSA
+    encoding: PKCS1
+    size: 4096
+  issuerRef:
+    kind: Issuer
+    name: keycloak
+    group: cert-manager.io
+  secretName: keycloak.tls
+  subject:
+    organizations:
+      - Local Eclipse Che
+  usages:
+    - server auth
+    - digital signature
+    - key encipherment
+    - key agreement
+    - data encipherment
+

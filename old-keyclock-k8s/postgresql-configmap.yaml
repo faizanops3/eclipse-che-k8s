@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-config
+  # namespace: key
+data:
+  POSTGRESQL_USERNAME: keycloak
+  POSTGRESQL_DATABASE: keycloak
+  POSTGRESQL_PASSWORD: password
