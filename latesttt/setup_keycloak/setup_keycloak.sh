@@ -16,6 +16,50 @@ kubectl create namespace keycloak --dry-run=client -o yaml | kubectl apply -f -
 
 # Step 2: Create Certificate for Keycloak
 echo "Creating Certificate for Keycloak..."
+# cat <<EOF | kubectl apply -f -
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: keycloak
+#   namespace: keycloak
+#   labels:
+#     app: keycloak
+# spec:
+#   secretName: keycloak.tls
+#   issuerRef:
+#     name: che-letsencrypt
+#     kind: ClusterIssuer
+#   commonName: $KEYCLOAK_DOMAIN_NAME
+#   dnsNames:
+#   - $KEYCLOAK_DOMAIN_NAME
+#   usages:
+#     - server auth
+#     - digital signature
+#     - key encipherment
+#     - key agreement
+#     - data encipherment
+# EOF
+
+
+cat <<EOF | kubectl apply -f -
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: che-letsencrypt
+spec:
+  acme:
+    email: your@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: che-letsencrypt-key
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+EOF
+
+
+
 cat <<EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -39,6 +83,12 @@ spec:
     - key agreement
     - data encipherment
 EOF
+
+
+
+
+
+
 
 # Step 3: Deploy Keycloak Service and Deployment
 echo "Deploying Keycloak Service and Deployment..."
