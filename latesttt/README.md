@@ -137,7 +137,7 @@ sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
 - Replace with your domain: `<your-domain>`
 
 ```sh
-    - --oidc-issuer-url=https://keycloak.<your-domain>/realms/che
+    - --oidc-issuer-url=https://keycloak.devpath.xyz/realms/che
     - --oidc-username-claim=email
     - --oidc-client-id=k8s-client
     - --oidc-ca-file=/etc/ca-certificates/che-tls
@@ -162,7 +162,8 @@ bash ./create_che_patch.sh "keycloak.example.com"
 ```sh
 chectl server:deploy \
     --platform k8s \
-    --domain $CHE_DOMAIN_NAME \
+    --domain che.devpath.xyz \
+    --che-operator-cr-patch-yaml che-cluster-patch.yaml \
     --skip-cert-manager \
     --k8spodreadytimeout 240000 \
     --k8spoddownloadimagetimeout 240000
